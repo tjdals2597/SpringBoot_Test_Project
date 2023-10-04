@@ -31,7 +31,7 @@ public class UserController {
     }
 	
 	@PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "*")
     public UserProVO login(@RequestBody UserProVO requestData){
 		if (encoder.matches(requestData.getPassword(), userProDAO.getUserPassword(requestData)))
 		{
@@ -45,7 +45,7 @@ public class UserController {
     }
 	
 	@PostMapping("/signup")
-    @CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "*")
 	public String signup(@RequestBody UserProVO requestData) {
     	if (requestData.getUserId() == null || requestData.getUserId().isEmpty()) {
     		return "아이디 없음";
@@ -72,7 +72,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/signup/check")
-    @CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "*")
 	public boolean idCheck(@RequestBody String requestID) {
 		UserProVO vo = new UserProVO();
 		vo.setUserId(requestID);
@@ -85,10 +85,10 @@ public class UserController {
 	}
 	
 	@PostMapping("/info")
-    @CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "*")
     public JSONObject qwasd(@RequestBody UserProVO requestData) {
         UserEyeVO user = new UserEyeVO();
-        user.setUserId(requestData.getUserId());;
+        user.setUserId(requestData.getUserId());
         HashMap<String, Object> myHashMap = new HashMap<>();
         user = userEyeDAO.getUserEyeAllData(user);
         myHashMap.put("userId", user.getUserId());
@@ -107,7 +107,7 @@ public class UserController {
     }
 	
 	@PostMapping("/map")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     public JSONObject map(@RequestBody UserProVO requestData) {
         UserProVO vo = new UserProVO();
         vo.setUserId(requestData.getUserId());

@@ -23,4 +23,6 @@ public interface UserEyeDAO {
 	float getAllUserCycleAvg();
 	
 	int getUserRank(UserEyeVO vo);
+	
+	int getUserWarningCount(UserEyeVO vo);
 }

@@ -67,10 +67,31 @@
     <select id="getUserRank" resultType="int">
     	SELECT ranking
     	FROM (
-    		SELECT user_id, total_operating_time, total_blink_times, warning_count, blink_cycle,
-				total_operating_time DIV warning_count, rank() over (order by total_operating_time DIV warning_count desc) as 'ranking'
+    		SELECT
+    			user_id,
+    			total_operating_time,
+    			total_blink_times,
+    			warning_count,
+    			blink_cycle,
+				CASE 
+    			    WHEN warning_count = 0 THEN total_operating_time
+    			    ELSE total_operating_time DIV warning_count
+  				END AS 'modified_warning_count',
+  				RANK() OVER (ORDER BY 
+        			CASE 
+         				WHEN warning_count = 0 THEN total_operating_time
+            			ELSE total_operating_time DIV warning_count
+        			END DESC
+    			) AS 'ranking'
 			FROM eyeloveyoudb.usereyeinfo
-			) ranked
+		) ranked
+		WHERE user_id = #{userId}
+    </select>
+    
+    <!-- user_id의 경고음 출력 수 -->
+    <select id="getUserWarningCount" resultType="int">
+    	SELECT warning_count
+		FROM usereyeinfo
 		WHERE user_id = #{userId}
     </select>
 </mapper>
