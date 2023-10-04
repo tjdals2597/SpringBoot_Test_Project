@@ -71,6 +71,19 @@ public class UserController {
     	}
 	}
 	
+	@PostMapping("/signup/check")
+    @CrossOrigin(origins = "http://localhost:3000")
+	public boolean idCheck(@RequestBody String requestID) {
+		UserProVO vo = new UserProVO();
+		vo.setUserId(requestID);
+		int isDuplicate = userProDAO.idCheck(vo);
+		if (isDuplicate > 0) {
+    		return true;
+    	} else {
+            return false;
+        }
+	}
+	
 	@PostMapping("/info")
     @CrossOrigin(origins = "http://localhost:3000")
     public JSONObject qwasd(@RequestBody UserProVO requestData) {
