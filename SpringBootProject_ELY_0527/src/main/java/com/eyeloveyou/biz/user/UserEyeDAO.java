@@ -3,8 +3,12 @@ package com.eyeloveyou.biz.user;
 public interface UserEyeDAO {
 	
 	void setUserEyeData(UserEyeVO vo);
+	
+	int dataCheck(UserEyeVO vo);
 
 	UserEyeVO getUserEyeAllData(UserEyeVO vo);
+	
+	void updateUserData(UserEyeVO vo);
 	
 	int getDataCount();
 	

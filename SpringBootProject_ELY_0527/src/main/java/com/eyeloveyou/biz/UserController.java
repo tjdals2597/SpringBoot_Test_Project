@@ -84,13 +84,15 @@ public class UserController {
 	
 	@PostMapping("/save")
 	@CrossOrigin(origins = "*")
-	public boolean insertEyeData(@RequestBody UserEyeVO requestData) {
-		if (requestData.getTotalOperatingTime() >= 0) {
-			userEyeDAO.setUserEyeData(requestData);
-			return true;
+	public String insertEyeData(@RequestBody UserEyeVO requestData) {
+		int isCheck = userEyeDAO.dataCheck(requestData);
+		if (isCheck >= 1) {
+			userEyeDAO.updateUserData(requestData);
+			return "update";
 		}
 		else {
-			return false;
+			userEyeDAO.setUserEyeData(requestData);
+			return "insert";
 		}
 	}
 	
