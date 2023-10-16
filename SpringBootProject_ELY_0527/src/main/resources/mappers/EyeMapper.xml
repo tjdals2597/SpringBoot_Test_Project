@@ -26,7 +26,7 @@
     		total_operating_time = #{totalOperatingTime},
     		total_blink_times = #{totalBlinkTimes},
     		warning_count = #{warningCount},
-    		blink_cycle = #{blinkCycle})
+    		blink_cycle = #{blinkCycle}
 		WHERE user_id = #{userId}
     </update>
     <!-- 전체 사용자 데이터 수 -->
@@ -101,6 +101,9 @@
         			CASE 
          				WHEN warning_count = 0 THEN total_operating_time
             			ELSE total_operating_time DIV warning_count
+        			END DESC,
+        			CASE 
+            			WHEN warning_count = 0 THEN warning_count
         			END DESC
     			) AS 'ranking'
 			FROM eyeloveyoudb.usereyeinfo
