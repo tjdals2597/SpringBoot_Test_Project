@@ -12,23 +12,21 @@ public interface UserEyeDAO {
 	
 	int getDataCount();
 	
-	float getAllUserTimeSum();
+	int getUserRank(UserEyeVO vo);
 	
-	float getAllUserBlinkSum();
+	float getUserBTpM(UserEyeVO vo);
 	
-	int getAllUserWarningSum();
+	float getUserWCpM(UserEyeVO vo);
 	
-	float getAllUserCycleSum();
+	float getAllBTpM();
+	
+	float getAllWCpM();
 	
 	float getAllUserTimeAvg();
 	
-	float getAllUserBlinkAvg();
-	
-	float getAllUserWarningAvg();
-	
 	float getAllUserCycleAvg();
 	
-	int getUserRank(UserEyeVO vo);
+	float getBlinkRatio(UserEyeVO vo);
 	
-	int getUserWarningCount(UserEyeVO vo);
+	float getWarningRatio(UserEyeVO vo);
 }
