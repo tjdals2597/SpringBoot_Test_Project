@@ -5,15 +5,21 @@ import java.util.HashMap;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eyeloveyou.biz.user.UserEyeDAO;
 import com.eyeloveyou.biz.user.UserEyeVO;
 import com.eyeloveyou.biz.user.UserProDAO;
 import com.eyeloveyou.biz.user.UserProVO;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class UserController {
@@ -22,66 +28,109 @@ public class UserController {
     private UserProDAO userProDAO;
 	@Autowired
 	private UserEyeDAO userEyeDAO;
-	
-	private final PasswordEncoder encoder;
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+	// private final PasswordEncoder encoder;
 
-    @Autowired
-    public UserController(PasswordEncoder encoder) {
-        this.encoder = encoder;
+	/*
+	 * @Autowired public UserController(PasswordEncoder encoder) { this.encoder =
+	 * encoder; }
+	 */	
+    @GetMapping("/login")
+    public String showLoginForm() {
+    	return "login";
     }
-	
-	@PostMapping("/login")
-	@CrossOrigin(origins = "*")
-    public UserProVO login(@RequestBody UserProVO requestData){
-		if (encoder.matches(requestData.getPassword(), userProDAO.getUserPassword(requestData)))
-		{
-			UserProVO user = userProDAO.getUserData(requestData);
-			return user;
-		}
-		else
-		{
-			return null;
-		}
-    }
-	
-	@PostMapping("/signup")
-	@CrossOrigin(origins = "*")
-	public String signup(@RequestBody UserProVO requestData) {
-    	if (requestData.getUserId() == null || requestData.getUserId().isEmpty()) {
-    		return "아이디 없음";
-    	}
-    	else if (requestData.getPassword() == null || requestData.getPassword().isEmpty()) {
-    		return "비밀번호 없음";
-    	}
-    	else if (requestData.getName() == null || requestData.getName().isEmpty()) {
-    		return "이름 없음";
-    	}
-    	else if (requestData.getEmail() == null || requestData.getEmail().isEmpty()) {
-    		return "이메일 없음";
-    	}
-    	else if (requestData.getHomeAddress() == null || requestData.getHomeAddress().isEmpty()) {
-    		return "주소 없음";
+    @PostMapping("/login")
+    public String login(String id, String pw, Model model, HttpSession session) {
+    	UserProVO vo = new UserProVO();
+    	vo.setUserId(id);
+    	vo.setPassword(pw);
+    	if (passwordEncoder.matches(vo.getPassword(), userProDAO.getUserPassword(vo))) {
+    		UserProVO user = userProDAO.getUserData(vo);
+    		session.setAttribute("userValue", user);
+    		model.addAttribute("userValue", user);
+    		return "index";
     	}
     	else {
-    		String rawPW = requestData.getPassword();
-    		String encPW = encoder.encode(rawPW);
-    		requestData.setPassword(encPW);
-    		userProDAO.signUserData(requestData);
-    		return "성공";
+    		return "redirect:/login?error";
     	}
-	}
-	
-	@PostMapping("/signup/check")
-	@CrossOrigin(origins = "*")
-	public boolean idCheck(@RequestBody UserProVO requestData) {
-		int isDuplicate = userProDAO.idCheck(requestData);
-		if (isDuplicate > 0) {
-    		return true;
+    }
+    @GetMapping("/signup")
+    public String showSignForm() {
+    	return "signup";
+    }
+    @PostMapping("/signup")
+    public String signup(String id, String pw, String na, String em, String ha) {
+    	if (id == null || id.isEmpty()) {
+    		return "redirect:/signup?error";
+    	}
+    	else if (pw == null || pw.isEmpty()) {
+    		return "redirect:/signup?error";
+    	}
+    	else if (na == null || na.isEmpty()) {
+    		return "redirect:/signup?error";
+    	}
+    	else if (em == null || em.isEmpty()) {
+    		return "redirect:/signup?error";
+    	}
+    	else if (ha == null || ha.isEmpty()) {
+    		return "redirect:/signup?error";
+    	}
+    	else {
+    		String encPW = passwordEncoder.encode(pw);
+    		UserProVO vo = new UserProVO();
+    		vo.setUserId(id);
+    		vo.setPassword(encPW);
+    		vo.setName(na);
+    		vo.setEmail(em);
+    		vo.setHomeAddress(ha);
+    		userProDAO.signUserData(vo);
+    		return "login";
+    	}
+    }
+    @PostMapping("/signup/check")
+    @ResponseBody
+    public String idCheck(@RequestParam String userId) {
+    	UserProVO vo = new UserProVO();
+    	vo.setUserId(userId);
+    	int isDuplicate = userProDAO.idCheck(vo);
+    	if (isDuplicate > 0) {
+    		return "duplicate";
     	} else {
-            return false;
+            return "available";
         }
-	}
-	
+    }
+
+	/*
+	 * @PostMapping("/login")
+	 * 
+	 * @CrossOrigin(origins = "*") public UserProVO login(@RequestBody UserProVO
+	 * requestData){ if (encoder.matches(requestData.getPassword(),
+	 * userProDAO.getUserPassword(requestData))) { UserProVO user =
+	 * userProDAO.getUserData(requestData); return user; } else { return null; } }
+	 */	
+	/*
+	 * @PostMapping("/signup")
+	 * 
+	 * @CrossOrigin(origins = "*") public String signup(@RequestBody UserProVO
+	 * requestData) { if (requestData.getUserId() == null ||
+	 * requestData.getUserId().isEmpty()) { return "아이디 없음"; } else if
+	 * (requestData.getPassword() == null || requestData.getPassword().isEmpty()) {
+	 * return "비밀번호 없음"; } else if (requestData.getName() == null ||
+	 * requestData.getName().isEmpty()) { return "이름 없음"; } else if
+	 * (requestData.getEmail() == null || requestData.getEmail().isEmpty()) { return
+	 * "이메일 없음"; } else if (requestData.getHomeAddress() == null ||
+	 * requestData.getHomeAddress().isEmpty()) { return "주소 없음"; } else { String
+	 * rawPW = requestData.getPassword(); String encPW = encoder.encode(rawPW);
+	 * requestData.setPassword(encPW); userProDAO.signUserData(requestData); return
+	 * "성공"; } }
+	 * 
+	 * @PostMapping("/signup/check")
+	 * 
+	 * @CrossOrigin(origins = "*") public boolean idCheck(@RequestBody UserProVO
+	 * requestData) { int isDuplicate = userProDAO.idCheck(requestData); if
+	 * (isDuplicate > 0) { return true; } else { return false; } }
+	 */	
 	@PostMapping("/save")
 	@CrossOrigin(origins = "*")
 	public String insertEyeData(@RequestBody UserEyeVO requestData) {
