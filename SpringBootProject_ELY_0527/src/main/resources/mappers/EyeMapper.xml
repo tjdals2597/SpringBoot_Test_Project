@@ -121,14 +121,14 @@
     
     <!-- 내 눈 깜박임 비율 -->
     <select id="getBlinkRatio" resultType="float">
-		SELECT ROUND(total_blink_times / (total_blink_times + warning_count), 2)
+		SELECT total_blink_times
 		FROM usereyeinfo
 		WHERE user_id = #{userId}
     </select>
     
     <!-- 내 경고음 출력 비율 -->
     <select id="getWarningRatio" resultType="float">
-		SELECT ROUND(warning_count / (total_blink_times + warning_count), 2)
+		SELECT warning_count
 		FROM usereyeinfo
 		WHERE user_id = #{userId}
     </select>

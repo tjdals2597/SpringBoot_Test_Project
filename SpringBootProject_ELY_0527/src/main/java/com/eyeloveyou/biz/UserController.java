@@ -108,11 +108,11 @@ public class UserController {
         myHashMap.put("userTot", user.getTotalOperatingTime()); // 총 동작 시간
         myHashMap.put("timeAvg", userEyeDAO.getAllUserTimeAvg()); // 전체 평균 동작 시간
         // 차트2
-        myHashMap.put("userTot", userEyeDAO.getUserBTpM(user)); // 개인 분당 눈 깜박임 횟수
-        myHashMap.put("timeAvg", userEyeDAO.getAllBTpM()); // 전체 평균 분당 눈 깜박임 횟수
+        myHashMap.put("userBTpM", userEyeDAO.getUserBTpM(user)); // 개인 분당 눈 깜박임 횟수
+        myHashMap.put("allBTpM", userEyeDAO.getAllBTpM()); // 전체 평균 분당 눈 깜박임 횟수
         // 차트3
-        myHashMap.put("userTot", userEyeDAO.getUserWCpM(user)); // 개인 분당 경고음 출력 횟수
-        myHashMap.put("timeAvg", userEyeDAO.getAllWCpM()); // 전체 평균 분당 경고음 출력 횟수
+        myHashMap.put("userWCpM", userEyeDAO.getUserWCpM(user)); // 개인 분당 경고음 출력 횟수
+        myHashMap.put("allWCpM", userEyeDAO.getAllWCpM()); // 전체 평균 분당 경고음 출력 횟수
         // 차트4
         myHashMap.put("userBc", user.getBlinkCycle()); // 개인 눈 깜박임 주기
         myHashMap.put("cycleAvg", userEyeDAO.getAllUserCycleAvg()); // 전체 평균 눈 깜박임 주기
